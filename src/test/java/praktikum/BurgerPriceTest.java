@@ -5,9 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.List;
 
 import static praktikum.IngredientType.FILLING;
 import static praktikum.IngredientType.SAUCE;
@@ -18,6 +21,11 @@ public class BurgerPriceTest {
     @Mock
     Bun bun;
 
+    @Mock
+    List<Ingredient> ingredients;
+
+    @InjectMocks
+    Burger burger = new Burger();
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -46,17 +54,13 @@ public class BurgerPriceTest {
     //Проверка, что метод getPrice() корректно подсчитывает стоимость бургера
     @Test
     public void testGetPrice() {
-        Burger burger = new Burger();
 
-        //Подготовить тестовые данные
-        Mockito.when(bun.getPrice()).thenReturn(Float.valueOf(988));
         Ingredient ingredient = new Ingredient(FILLING, "Начинка 1", ingredientFirst);
         Ingredient ingredient2 = new Ingredient(FILLING, "Начинка 2", ingredientSecond);
         Ingredient ingredient3 = new Ingredient(SAUCE, "Соус", ingredientThird);
-        burger.addIngredient(ingredient);
-        burger.addIngredient(ingredient2);
-        burger.addIngredient(ingredient3);
-        burger.setBuns(bun);
+        //Подготовить тестовые данные
+        Mockito.when(bun.getPrice()).thenReturn(Float.valueOf(988));
+        Mockito.when(ingredients.iterator()).thenReturn(List.of(ingredient, ingredient2, ingredient3).iterator());
 
         //Вызвать проверяемый метод
         float actualPrice = burger.getPrice();
